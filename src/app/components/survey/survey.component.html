@@ -1,0 +1,50 @@
+<button class="btn btn-primary" (click)="open(content)">Start</button>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{survey.title}}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click');reset()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="alert alert-danger" role="alert" *ngIf="error === true">{{errorMsg}}</div>
+    <div *ngFor="let question of survey.questionSet">
+      <div *ngIf="question.questionOrder === order">
+        <p>Question {{question.questionOrder}}: {{question.question}}</p>
+
+        <div *ngIf="question.type === 'boolean'">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="radio" id="false" value="false" [(ngModel)]="value">
+            <label class="form-check-label" for="false">
+              False
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="radio" id="true" value="true" [(ngModel)]="value">
+            <label class="form-check-label" for="true">
+              True
+            </label>
+          </div>
+        </div>
+
+        <div *ngIf="question.type === 'text'">
+          <input type="text" [(ngModel)]="value">
+        </div>
+
+        <div *ngIf="question.type === 'choices'">
+          <div class="form-check" *ngFor="let choice of question.choices.split(',')">
+            <input class="form-check-input" type="radio" name="multipleChoice" id="{{choice}}" value="{{choice}}"
+                   [(ngModel)]="value">
+            <label class="form-check-label" for="{{choice}}">
+              {{choice}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button *ngIf="order !== 0" class="btn btn-outline-dark" (click)="previousQuestion()">Prev</button>
+    <button *ngIf="order !== survey.questionSet.length - 1" class="btn btn-outline-dark" (click)="nextQuestion()">Next</button>
+    <button *ngIf="order === survey.questionSet.length - 1" class="btn btn-outline-dark" (click)="submit()">Submit</button>
+  </div>
+</ng-template>
