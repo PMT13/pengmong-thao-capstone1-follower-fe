@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbModalOptions} from "@ng-bootstrap/ng-bootstrap";
 import {DataService} from "../../services/data.service";
 import {IResponseDTO} from "../../interfaces/IResponseDTO";
 import {ISurvey} from "../../interfaces/ISurvey";
@@ -18,6 +18,7 @@ export class SurveyComponent implements OnInit {
   error: boolean = false;
   errorMsg: string = "";
 
+  modalOption: NgbModalOptions = {};
   constructor(private modalService: NgbModal, private dataService: DataService) {
   }
 
@@ -30,7 +31,9 @@ export class SurveyComponent implements OnInit {
   }
 
   open(content:any) {
-    this.modalService.open(content);
+    this.modalOption.backdrop = 'static';
+    this.modalOption.keyboard = false;
+    this.modalService.open(content,this.modalOption);
   }
 
   previousQuestion() {
