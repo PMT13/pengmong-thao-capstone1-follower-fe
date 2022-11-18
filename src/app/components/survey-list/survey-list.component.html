@@ -1,9 +1,13 @@
-<div class="container text-center">
+<div class="container py-2 text-center">
   <h1>Surveys (Follower)</h1>
-  <div class="row justify-content-md-center">
-    <div class="col-sm-3 text-center border border-dark rounded-5" *ngFor="let survey of surveyList">
-      <h1>{{survey.title}}</h1>
-      <app-survey [survey]="survey"></app-survey>
+  <div class="row">
+    <div class="col-sm-4 col-md-3 py-3" *ngFor="let survey of surveyList">
+      <div class="card border-primary">
+        <div class="card-body">
+          <h2>{{survey.title}}</h2>
+          <app-survey [survey]="survey"></app-survey>
+        </div>
+      </div>
     </div>
   </div>
 </div>
