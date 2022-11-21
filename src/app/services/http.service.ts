@@ -13,14 +13,18 @@ export class HttpService {
   constructor(private httpClient: HttpClient) { }
 
   getAllSurveys() {
-    return this.httpClient.get('http://localhost:3000/api/survey') as Observable<ISurvey[]>
+    return this.httpClient.get('http://localhost:3000/api/survey') as Observable<ISurvey[]>;
   }
 
+  getSurveyById(id:number){
+    return this.httpClient.get('http://localhost:3000/api/survey/' + id) as Observable<ISurvey>;
+  }
+  
   getAllResponses() {
-    return this.httpClient.get('http://localhost:3000/api/surveyresponses') as Observable<ISurveyResponses[]>
+    return this.httpClient.get('http://localhost:3000/api/surveyresponses') as Observable<ISurveyResponses[]>;
   }
 
   submitResponses(responses: ISurveyResponsesDTO) {
-    return this.httpClient.post('http://localhost:3000/api/surveyresponses',responses) as Observable<ISurveyResponses[]>
+    return this.httpClient.post('http://localhost:3000/api/surveyresponses',responses) as Observable<ISurveyResponses[]>;
   }
 }

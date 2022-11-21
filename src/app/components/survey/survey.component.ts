@@ -1,8 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NgbModal, NgbModalOptions} from "@ng-bootstrap/ng-bootstrap";
 import {DataService} from "../../services/data.service";
 import {IResponseDTO} from "../../interfaces/IResponseDTO";
 import {ISurvey} from "../../interfaces/ISurvey";
+import { HttpService } from 'src/app/services/http.service';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-survey',
@@ -15,11 +17,14 @@ export class SurveyComponent implements OnInit {
   value!: string;
   order: number = 0;
   responseArr: IResponseDTO[] = [];
+  
+  startError: boolean = false; 
+  startErrorMsg: string = ""; 
   error: boolean = false;
   errorMsg: string = "";
 
   modalOption: NgbModalOptions = {};
-  constructor(private modalService: NgbModal, private dataService: DataService) {
+  constructor(private modalService: NgbModal, private dataService: DataService, private httpService: HttpService) {
   }
 
   ngOnInit(): void {
@@ -31,9 +36,26 @@ export class SurveyComponent implements OnInit {
   }
 
   open(content:any) {
-    this.modalOption.backdrop = 'static';
-    this.modalOption.keyboard = false;
-    this.modalService.open(content,this.modalOption);
+    this.httpService.getSurveyById(this.survey.id).pipe(first()).subscribe({
+      next: data => {
+        if(data === null){
+          this.startError = true;
+          this.startErrorMsg = "Survey no longer exists, please update survey list!";
+          return;
+        }
+        this.survey = data;
+        this.modalOption.backdrop = 'static';
+        this.modalOption.keyboard = false;
+        this.modalService.open(content,this.modalOption);
+      },
+      error: (err) => {
+        this.modalOption.backdrop = 'static';
+        this.modalOption.keyboard = false;
+        this.modalService.open(content,this.modalOption);
+        this.error = true;
+        this.errorMsg = err;
+      }
+    })
   }
 
   previousQuestion() {

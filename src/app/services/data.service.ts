@@ -32,7 +32,7 @@ export class DataService {
       }
     })
   }
-
+  
   getAllResponses(){
     this.httpService.getAllResponses().pipe(first()).subscribe({
       next: data => {

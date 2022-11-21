@@ -1,8 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ISurvey} from "../../interfaces/ISurvey";
 import {ISurveyResponses} from "../../interfaces/ISurveyResponses";
-import {Subscription} from "rxjs";
+import {first, Subscription} from "rxjs";
 import {DataService} from "../../services/data.service";
+import { HttpService } from 'src/app/services/http.service';
 
 @Component({
   selector: 'app-survey-list',
@@ -17,7 +18,7 @@ export class SurveyListComponent implements OnInit,OnDestroy {
   sub:Subscription;
   subTwo: Subscription;
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, private httpService: HttpService) {
     this.surveyList = this.dataService.surveyList;
     this.surveyResponses = this.dataService.surveyResponses;
 
@@ -40,4 +41,15 @@ export class SurveyListComponent implements OnInit,OnDestroy {
     this.subTwo.unsubscribe();
   }
 
+  updateSurveyList(){
+    this.httpService.getAllSurveys().pipe(first()).subscribe({
+      next: data => {
+        this.dataService.surveyList = data;
+        this.dataService.$surveyList.next(data);
+      },
+      error: (err) => {
+        alert(err);
+      }
+    })
+  }
 }

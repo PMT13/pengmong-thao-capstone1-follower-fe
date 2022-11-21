@@ -1,5 +1,5 @@
-<button class="btn btn-primary" (click)="open(content)">Start</button>
-
+<div class="alert alert-danger" role="alert" *ngIf="startError === true">{{startErrorMsg}}</div>
+<button *ngIf="startError === false" class="btn btn-primary" (click)="open(content)">Start</button>
 <ng-template #content let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">{{survey.title}}</h4>
